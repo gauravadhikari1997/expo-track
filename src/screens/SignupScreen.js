@@ -1,15 +1,44 @@
-import React, { useState } from "react";
-import { View, StyleSheet } from "react-native";
+import React, { useState, useContext, useEffect } from "react";
+import { View, StyleSheet, TouchableOpacity } from "react-native";
 import { Text, Input, Button } from "react-native-elements";
+import { AsyncStorage } from "react-native";
+import { NavigationEvents } from "react-navigation";
 
+import trackerApi from "../api/tracker";
+import TrackContext from "../context/TrackContext";
 import Spacer from "../components/Spacer";
 
 const SignupScreen = ({ navigation }) => {
+  const appContext = useContext(TrackContext);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
+  async function signup() {
+    try {
+      const response = await trackerApi.post(`/signup`, { email, password });
+      await AsyncStorage.setItem("token", response.data.token);
+      appContext.dispatch({
+        type: "SIGN_IN",
+        payload: response.data.token,
+      });
+      navigation.navigate("TrackList");
+    } catch (e) {
+      appContext.dispatch({
+        type: "ADD_ERROR",
+        payload: "Something went wrong with Signup",
+      });
+    }
+  }
+
   return (
     <View style={styles.container}>
+      <NavigationEvents
+        onWillFocus={() =>
+          appContext.dispatch({
+            type: "CLEAR_ERROR_MESSAGE",
+          })
+        }
+      />
       <Spacer>
         <Text h3 style={styles.title}>
           Sign Up for Track
@@ -31,9 +60,19 @@ const SignupScreen = ({ navigation }) => {
         onChangeText={(newText) => setPassword(newText)}
         label="Password"
       />
+      {appContext.state.errorMessage ? (
+        <Text style={styles.error}>{appContext.state.errorMessage}</Text>
+      ) : null}
       <Spacer>
-        <Button title="Signup" />
+        <Button title="Signup" raised onPress={signup} />
       </Spacer>
+      <TouchableOpacity onPress={() => navigation.navigate("Signin")}>
+        <Spacer>
+          <Text style={styles.link}>
+            Already have an account? Signin instead
+          </Text>
+        </Spacer>
+      </TouchableOpacity>
     </View>
   );
 };
@@ -51,6 +90,14 @@ const styles = StyleSheet.create({
   title: {
     textAlign: "center",
     marginBottom: 20,
+  },
+  error: {
+    fontSize: 16,
+    color: "red",
+    textAlign: "center",
+  },
+  link: {
+    color: "#1a8cff",
   },
 });
 

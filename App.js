@@ -1,4 +1,4 @@
-import React, { useReducer } from "react";
+import React, { useReducer, useEffect } from "react";
 import { createAppContainer, createSwitchNavigator } from "react-navigation";
 import { createStackNavigator } from "react-navigation-stack";
 import { createBottomTabNavigator } from "react-navigation-tabs";
@@ -9,10 +9,12 @@ import SignupScreen from "./src/screens/SignupScreen";
 import TrackCreateScreen from "./src/screens/TrackCreateScreen";
 import TrackDetailScreen from "./src/screens/TrackDetailScreen";
 import TrackListScreen from "./src/screens/TrackListScreen";
+import ResolveAuthScreen from "./src/screens/ResolveAuthScreen";
 
 import TrackContext from "./src/context/TrackContext";
 
 const switchNavigator = createSwitchNavigator({
+  ResolveAuth: ResolveAuthScreen,
   loginFlow: createStackNavigator({
     Signup: SignupScreen,
     Signin: SigninScreen,
@@ -30,10 +32,19 @@ const switchNavigator = createSwitchNavigator({
 const App = createAppContainer(switchNavigator);
 
 export default () => {
-  const initialState = [];
+  const initialState = {
+    token: null,
+    errorMessage: "",
+  };
 
   function ourReducer(state, action) {
     switch (action.type) {
+      case "ADD_ERROR":
+        return { ...state, errorMessage: action.payload };
+      case "SIGN_IN":
+        return { errorMessage: "", token: action.payload };
+      case "CLEAR_ERROR_MESSAGE":
+        return { ...state, errorMessage: "" };
       default:
         return state;
     }
@@ -41,8 +52,8 @@ export default () => {
   const [state, dispatch] = useReducer(ourReducer, initialState);
 
   return (
-    <TrackContext.Provider>
-      <App value={state} />
+    <TrackContext.Provider value={{ state, dispatch }}>
+      <App />
     </TrackContext.Provider>
   );
 };
