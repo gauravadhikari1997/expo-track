@@ -45,6 +45,8 @@ export default () => {
         return { errorMessage: "", token: action.payload };
       case "CLEAR_ERROR_MESSAGE":
         return { ...state, errorMessage: "" };
+      case "SIGN_OUT":
+        return { ...state, token: "" };
       default:
         return state;
     }
