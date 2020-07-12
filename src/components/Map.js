@@ -1,42 +1,32 @@
 import React from "react";
-import { StyleSheet } from "react-native";
-import MapView, { Polyline } from "react-native-maps";
+import { StyleSheet, ActivityIndicator } from "react-native";
+import MapView, { Polyline, Circle } from "react-native-maps";
 
-const Map = () => {
+const Map = ({ currentLocation, locations }) => {
+  if (!currentLocation) {
+    return <ActivityIndicator size="large" style={{ marginTop: 300 }} />;
+  }
   return (
     <MapView
       initialRegion={{
-        latitude: 28.676181929411236,
-        longitude: 77.47988276634659,
+        ...currentLocation.coords,
+        latitudeDelta: 0.01,
+        longitudeDelta: 0.01,
+      }}
+      region={{
+        ...currentLocation.coords,
         latitudeDelta: 0.01,
         longitudeDelta: 0.01,
       }}
       style={styles.map}
     >
-      <Polyline
-        coordinates={[
-          {
-            latitude: 28.676181929411236,
-            longitude: 77.47988276634659,
-          },
-          {
-            latitude: 28.677181929411236,
-            longitude: 77.48988276634659,
-          },
-          {
-            latitude: 28.678181929411236,
-            longitude: 77.49988276634659,
-          },
-          {
-            latitude: 28.679181929411236,
-            longitude: 77.57988276634659,
-          },
-          {
-            latitude: 28.679981929411236,
-            longitude: 77.59988276634659,
-          },
-        ]}
+      <Circle
+        center={currentLocation.coords}
+        radius={30}
+        strokeColor="rgba(158,158,255,1.0)"
+        fillColor="rgba(158,158,255,0.3)"
       />
+      <Polyline coordinates={locations.map((loc) => loc.coords)} />
     </MapView>
   );
 };
