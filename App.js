@@ -13,6 +13,19 @@ import ResolveAuthScreen from "./src/screens/ResolveAuthScreen";
 
 import TrackContext from "./src/context/TrackContext";
 
+import { Feather } from "@expo/vector-icons";
+
+const trackListFlow = createStackNavigator({
+  TrackList: TrackListScreen,
+  TrackDetail: TrackDetailScreen,
+});
+trackListFlow.navigationOptions = () => {
+  return {
+    title: "Tracks",
+    tabBarIcon: <Feather name="list" size={24} color="black" />,
+  };
+};
+
 const switchNavigator = createSwitchNavigator({
   ResolveAuth: ResolveAuthScreen,
   loginFlow: createStackNavigator({
@@ -20,10 +33,7 @@ const switchNavigator = createSwitchNavigator({
     Signin: SigninScreen,
   }),
   mainFlow: createBottomTabNavigator({
-    trackListFlow: createStackNavigator({
-      TrackList: TrackListScreen,
-      TrackDetail: TrackDetailScreen,
-    }),
+    trackListFlow,
     TrackCreate: TrackCreateScreen,
     Account: AccountScreen,
   }),
@@ -35,6 +45,7 @@ export default () => {
   const initialState = {
     token: null,
     errorMessage: "",
+    tracks: [],
   };
 
   function ourReducer(state, action) {
@@ -47,6 +58,8 @@ export default () => {
         return { ...state, errorMessage: "" };
       case "SIGN_OUT":
         return { ...state, token: "" };
+      case "ADD_TRACKS":
+        return { ...state, tracks: action.payload };
       default:
         return state;
     }

@@ -1,9 +1,12 @@
 import React, { useContext } from "react";
-import { StyleSheet, Text } from "react-native";
-import { Button } from "react-native-elements";
-import TrackContext from "../context/TrackContext";
+import { StyleSheet } from "react-native";
+import { Button, Text } from "react-native-elements";
 import { AsyncStorage } from "react-native";
 import { SafeAreaView } from "react-navigation";
+import { MaterialIcons } from "@expo/vector-icons";
+
+import TrackContext from "../context/TrackContext";
+import Spacer from "../components/Spacer";
 
 const AccountScreen = ({ navigation }) => {
   const appContext = useContext(TrackContext);
@@ -16,12 +19,29 @@ const AccountScreen = ({ navigation }) => {
   }
   return (
     <SafeAreaView forceInset={{ top: "always" }}>
-      <Text>AccountScreen</Text>
-      <Button title="Sign Out" onPress={handleSignOut}></Button>
+      <Spacer>
+        <Text style={styles.heading} h3>
+          My Account
+        </Text>
+      </Spacer>
+      <Spacer>
+        <Button title="Sign Out" onPress={handleSignOut}></Button>
+      </Spacer>
     </SafeAreaView>
   );
 };
 
-const styles = StyleSheet.create({});
+AccountScreen.navigationOptions = () => {
+  return {
+    title: "Account",
+    tabBarIcon: <MaterialIcons name="settings" size={24} color="black" />,
+  };
+};
+
+const styles = StyleSheet.create({
+  heading: {
+    textAlign: "center",
+  },
+});
 
 export default AccountScreen;

@@ -11,6 +11,7 @@ import {
 } from "expo-location";
 import Spacer from "../components/Spacer";
 import tracker from "../api/tracker";
+import { FontAwesome5 } from "@expo/vector-icons";
 
 const TrackCreateScreen = ({ isFocused, navigation }) => {
   const [err, setErr] = useState(null);
@@ -82,12 +83,34 @@ const TrackCreateScreen = ({ isFocused, navigation }) => {
         {!recording && !!locations.length ? (
           <>
             <Spacer></Spacer>
-            <Button title="Save" loading={savePressed} onPress={handleSave} />
+            <Button
+              title="Save"
+              type="clear"
+              loading={savePressed}
+              onPress={handleSave}
+            />
+            <Button
+              title="Cancel"
+              type="clear"
+              onPress={() => {
+                setRecording(false);
+                setSavePressed(false);
+                setName("");
+                setLocations([]);
+              }}
+            />
           </>
         ) : null}
       </Spacer>
     </SafeAreaView>
   );
+};
+
+TrackCreateScreen.navigationOptions = () => {
+  return {
+    title: "Add Track",
+    tabBarIcon: <FontAwesome5 name="plus" size={24} color="black" />,
+  };
 };
 
 const styles = StyleSheet.create({
