@@ -10,14 +10,16 @@ import {
   Accuracy,
 } from "expo-location";
 import Spacer from "../components/Spacer";
+import tracker from "../api/tracker";
 
-const TrackCreateScreen = ({ isFocused }) => {
+const TrackCreateScreen = ({ isFocused, navigation }) => {
   const [err, setErr] = useState(null);
   const [currentLocation, setCurrentLocation] = useState(null);
   const [recording, setRecording] = useState(false);
   const [locations, setLocations] = useState([]);
   const [name, setName] = useState("");
   const [sub, setSub] = useState(null);
+  const [savePressed, setSavePressed] = useState(false);
 
   useEffect(() => {
     async function startWatching() {
@@ -45,10 +47,22 @@ const TrackCreateScreen = ({ isFocused }) => {
     }
   }, [isFocused, recording]);
 
+  async function handleSave() {
+    setRecording(false);
+    setSavePressed(true);
+    await tracker.post("/tracks", { name, locations });
+    setName("");
+    setLocations([]);
+    setSavePressed(false);
+    navigation.navigate("TrackList");
+  }
+
   return (
     <SafeAreaView forceInset={{ top: "always" }}>
       <Spacer>
-        <Text h3>Create a Track</Text>
+        <Text style={styles.heading} h3>
+          Create a Track
+        </Text>
       </Spacer>
       <Map locations={locations} currentLocation={currentLocation} />
       {err ? <Text>Please enable location permission</Text> : null}
@@ -60,14 +74,26 @@ const TrackCreateScreen = ({ isFocused }) => {
         />
         {recording ? (
           <Button title="Stop" onPress={() => setRecording(false)} />
+        ) : !!locations.length ? (
+          <Button title="Resume" onPress={() => setRecording(true)} />
         ) : (
-          <Button title="Record" onPress={() => setRecording(true)} />
+          <Button title="Start" onPress={() => setRecording(true)} />
         )}
+        {!recording && !!locations.length ? (
+          <>
+            <Spacer></Spacer>
+            <Button title="Save" loading={savePressed} onPress={handleSave} />
+          </>
+        ) : null}
       </Spacer>
     </SafeAreaView>
   );
 };
 
-const styles = StyleSheet.create({});
+const styles = StyleSheet.create({
+  heading: {
+    textAlign: "center",
+  },
+});
 
 export default withNavigationFocus(TrackCreateScreen);
