@@ -13,14 +13,18 @@
     "updates": {
       "fallbackToCacheTimeout": 0
     },
-    "assetBundlePatterns": [
-      "**/*"
-    ],
-    "ios": {
-      "supportsTablet": true
-    },
+    "assetBundlePatterns": ["**/*"],
     "web": {
       "favicon": "./assets/favicon.png"
+    },
+    "ios": {
+      "supportsTablet": true,
+      "bundleIdentifier": "com.gauravadhikari.track",
+      "buildNumber": "1.0.0"
+    },
+    "android": {
+      "package": "com.gauravadhikari.track",
+      "versionCode": 1
     }
   }
 }
