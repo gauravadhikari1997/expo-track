@@ -16,7 +16,7 @@ const SigninScreen = ({ navigation }) => {
   async function signin() {
     try {
       const response = await trackerApi.post(`/signin`, { email, password });
-      await AsyncStorage.setItem("token", response.data.token);
+      await AsyncStorage.setItem("trackAppToken", response.data.token);
       appContext.dispatch({
         type: "SIGN_IN",
         payload: response.data.token,

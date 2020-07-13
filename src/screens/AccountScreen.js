@@ -11,7 +11,7 @@ import Spacer from "../components/Spacer";
 const AccountScreen = ({ navigation }) => {
   const appContext = useContext(TrackContext);
   async function handleSignOut() {
-    await AsyncStorage.removeItem("token");
+    await AsyncStorage.removeItem("trackAppToken");
     appContext.dispatch({
       type: "SIGN_OUT",
     });

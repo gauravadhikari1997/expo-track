@@ -9,7 +9,7 @@ const instance = axios.create({
 instance.interceptors.request.use(
   //first function is called upon the request, second is called if there is an error
   async (config) => {
-    const token = await AsyncStorage.getItem("token");
+    const token = await AsyncStorage.getItem("trackAppToken");
     if (token) {
       config.headers.Authorization = `Bearer ${token}`;
     }

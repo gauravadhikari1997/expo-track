@@ -16,7 +16,7 @@ const SignupScreen = ({ navigation }) => {
   async function signup() {
     try {
       const response = await trackerApi.post(`/signup`, { email, password });
-      await AsyncStorage.setItem("token", response.data.token);
+      await AsyncStorage.setItem("trackAppToken", response.data.token);
       appContext.dispatch({
         type: "SIGN_IN",
         payload: response.data.token,

@@ -6,13 +6,16 @@ const ResolveAuthScreen = ({ navigation }) => {
   const appContext = useContext(TrackContext);
 
   useEffect(() => {
-    const token = AsyncStorage.getItem("token");
-    if (token) {
-      appContext.dispatch({ type: "SIGN_IN", payload: token });
-      navigation.navigate("TrackList");
-    } else {
-      navigation.navigate("Signup");
+    async function tryLocalSingin() {
+      const token = await AsyncStorage.getItem("trackAppToken");
+      if (token) {
+        appContext.dispatch({ type: "SIGN_IN", payload: token });
+        navigation.navigate("TrackList");
+      } else {
+        navigation.navigate("Signup");
+      }
     }
+    tryLocalSingin();
   }, []);
 
   return null;
