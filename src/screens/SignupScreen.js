@@ -12,21 +12,25 @@ const SignupScreen = ({ navigation }) => {
   const appContext = useContext(TrackContext);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [buttonPressed, setButtonPressed] = useState(false);
 
   async function signup() {
     try {
+      setButtonPressed(true);
       const response = await trackerApi.post(`/signup`, { email, password });
       await AsyncStorage.setItem("trackAppToken", response.data.token);
       appContext.dispatch({
         type: "SIGN_IN",
         payload: response.data.token,
       });
+      setButtonPressed(false);
       navigation.navigate("TrackList");
     } catch (e) {
       appContext.dispatch({
         type: "ADD_ERROR",
         payload: "Something went wrong with Signup",
       });
+      setButtonPressed(false);
     }
   }
 
@@ -64,7 +68,12 @@ const SignupScreen = ({ navigation }) => {
         <Text style={styles.error}>{appContext.state.errorMessage}</Text>
       ) : null}
       <Spacer>
-        <Button title="Signup" raised onPress={signup} />
+        <Button
+          title="Signup"
+          loading={buttonPressed}
+          raised
+          onPress={signup}
+        />
       </Spacer>
       <TouchableOpacity onPress={() => navigation.navigate("Signin")}>
         <Spacer>

@@ -25,6 +25,12 @@ const AccountScreen = ({ navigation }) => {
         </Text>
       </Spacer>
       <Spacer>
+        <Button
+          title="My Tracks"
+          onPress={() => navigation.navigate("TrackList")}
+        />
+      </Spacer>
+      <Spacer>
         <Button title="Sign Out" onPress={handleSignOut}></Button>
       </Spacer>
     </SafeAreaView>

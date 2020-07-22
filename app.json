@@ -24,6 +24,11 @@
     },
     "android": {
       "package": "com.gauravadhikari.track",
+      "config": {
+        "googleMaps": {
+          "apiKey": "AIzaSyAIbnW-2-cWZDaVUrShJ0qeEJe-1rBodgk"
+        }
+      },
       "versionCode": 1
     }
   }
